@@ -5,7 +5,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  name   = "ex-eks-mng"
+  name   = "istio-cluster"
   region = "us-east-2"
 
   vpc_cidr = "10.0.0.0/16"
@@ -28,6 +28,9 @@ module "vpc" {
 
   name = local.name
   cidr = local.vpc_cidr
+  # Cluster access entry
+  # To add the current caller identity as an administrator
+  
 
   azs             = local.azs
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
@@ -63,15 +66,15 @@ module "eks_al2" {
     kube-proxy             = {}
     vpc-cni                = {}
   }
-
+  enable_cluster_creator_admin_permissions = true
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
   eks_managed_node_groups = {
-    example = {
+    Istio-nodes = {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2_x86_64"
-      instance_types = ["t2.micro"]
+      instance_types = ["t2.medium"]
 
       min_size = 2
       max_size = 4
