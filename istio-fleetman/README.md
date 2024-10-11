@@ -10,3 +10,20 @@ VirtualPairProgrammers: https://virtualpairprogrammers.com/training-courses/Isti
 
 Aim: make Istio understandable - it's not that hard. I don't mention TCP/IP stack levels once. Or the CNCF.
 
+Conenect to cluster:
+aws eks update-kubeconfig --region us-east-2 --name ex-eks-mng-al2
+
+Steps to install istio:
+helm install istiod istio/istiod -n istio-system  
+                    OR 
+helm upgrade istiod istio/istiod -n istio-system --create-namespace --install
+helm install istio-base istio/base -n istio-system --set defaultRevision=default
+helm install istio-ingress istio/gateway -n istio-ingress --create-namespace 
+
+kubectl label namespace default "istio-injection=enabled"
+For isitio to work, add firewall rule 15017 from master to node groups
+
+Kiali:
+helm repo add kiali https://kiali.org/helm-charts
+helm install kiali-server kiali/kiali-server--namespace istio-system
+    
