@@ -1,0 +1,5 @@
+storageClass: "gp2"
+
+
+#accessModes:
+#  - ReadWriteMany

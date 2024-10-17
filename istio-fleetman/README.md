@@ -21,9 +21,16 @@ helm install istio-base istio/base -n istio-system --set defaultRevision=default
 helm install istio-ingress istio/gateway -n istio-ingress --create-namespace 
 
 kubectl label namespace default "istio-injection=enabled"
-For isitio to work, add firewall rule 15017 from master to node groups
+For istio to work, add firewall rule 15017 from master to node groups
 
 Kiali:
 helm repo add kiali https://kiali.org/helm-charts
-helm install kiali-server kiali/kiali-server--namespace istio-system
+helm install \
+    --set cr.create=true \
+    --set cr.namespace=istio-system \
+    --set cr.spec.auth.strategy="anonymous" \
+    --namespace kiali-operator \
+    --create-namespace \
+    kiali-operator \
+    kiali/kiali-operator
     
